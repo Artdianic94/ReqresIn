@@ -85,16 +85,22 @@ public class ReqresInRestAssuredTest {
 
     @Test
     public void checkUpdateTimeTest() {
+        UpdateUserModel updateUserModel = new UpdateUserModel();
+        updateUserModel.setName(GenerateFakeMessage.getFirstName());
         RestAssured
                 .given()
+                .contentType(ContentType.JSON)
                 .log()
                 .all()
+                .and()
+                .body(updateUserModel)
                 .when()
                 .patch("https://reqres.in/api/users/2")
                 .then()
                 .log()
                 .all()
-                .body("updatedAt", instanceOf(String.class));
+                .statusCode(200)
+                .body("name", instanceOf(String.class));
     }
 
     @Test
@@ -148,7 +154,7 @@ public class ReqresInRestAssuredTest {
                 .log()
                 .all()
                 .statusCode(400)
-                .body("error", instanceOf(String.class));
+                .body("error", equalTo("Missing password"));
     }
 
     @Test
@@ -187,7 +193,7 @@ public class ReqresInRestAssuredTest {
                 .log()
                 .all()
                 .statusCode(400)
-                .body("error", instanceOf(String.class));
+                .body("error", equalTo("Missing password"));
     }
 
     @Test
